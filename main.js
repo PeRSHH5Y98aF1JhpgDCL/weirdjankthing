@@ -26,6 +26,14 @@ window.otherBodies=[Bodies.circle(380, 100, 40, 10),Bodies.circle(460, 10, 40, 1
 				,Bodies.rectangle(300, 200, 80, 80, {inertia:Infinity})
 				,Bodies.rectangle(500, 200, 80, 80, {inertia:Infinity})
 				,Bodies.rectangle(600, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(700, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(300, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(500, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(600, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(700, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(300, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(500, 200, 80, 80, {inertia:Infinity})
+				,Bodies.rectangle(600, 200, 80, 80, {inertia:Infinity})
 				,Bodies.rectangle(700, 200, 80, 80, {inertia:Infinity})];
 window.ground = Bodies.rectangle(400, 380, 8100, 60, { isStatic: true });
 window.jumpSensor = Bodies.rectangle(0, 0, 40, 10, {

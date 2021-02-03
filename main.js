@@ -213,11 +213,10 @@ window.addEventListener("keydown", function(event) {
 window.oncontextmenu = function(e) {
 	e.preventDefault()
 	if (sel) {
-		if (sel.angularVelocity>0.01) {
-			Body.setAngularVelocity(sel,0.1)
-		} else {
-			Body.setAngularVelocity(sel,-0.1)
-		}
+
+			Body.setAngularVelocity(sel,sel.angularVelocity+0.01)
+	
+		
 	}
 }
 resetWorld()

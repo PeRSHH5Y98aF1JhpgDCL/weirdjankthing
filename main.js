@@ -11,32 +11,33 @@ var engine = Engine.create();
  var canvas = document.createElement('canvas'),
     context = canvas.getContext('2d');
 
-canvas.width = 1600;
-canvas.height = 1200;
 
 document.body.appendChild(canvas);
 realityExists=false
 resetWorld=()=>{             
 World.clear(engine.world)
 realityExists=false
-window.boxA = Bodies.rectangle(400, 200, 80, 80, {inertia:Infinity,friction:0.004});
-window.otherBodies=[Bodies.circle(380, 100, 40, 10),Bodies.circle(460, 10, 40, 10)
+window.boxA = Bodies.rectangle(400, 200, 80, 80, {inertia:Infinity,friction:0.002,density:0.0001,color:"#f00"});
+window.otherBodies=[Bodies.circle(-380, 100, 40, 10),Bodies.circle(-460, 10, 40, 10)
 				,Bodies.rectangle(1000, 50, 80, 1000, { isStatic: true })
 				,Bodies.rectangle(-1000, 50, 80, 1000, { isStatic: true })
-				,Bodies.rectangle(300, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(500, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(600, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(700, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(300, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(500, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(600, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(700, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(300, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(500, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(600, 200, 80, 80, {inertia:Infinity})
-				,Bodies.rectangle(700, 200, 80, 80, {inertia:Infinity})];
-window.ground = Bodies.rectangle(400, 380, 8100, 60, { isStatic: true });
-window.jumpSensor = Bodies.rectangle(0, 0, 40, 10, {
+				,Bodies.rectangle(300, 200, 80, 80)
+				,Bodies.rectangle(500, 200, 80, 80,)
+				,Bodies.rectangle(600, 200, 80, 80, )
+				,Bodies.rectangle(700, 200, 80, 80, )
+				,Bodies.rectangle(300, 200, 80, 80, )
+				,Bodies.rectangle(500, 200, 80, 80, )
+				,Bodies.rectangle(600, 200, 80, 80, )
+				,Bodies.rectangle(700, 200, 80, 80, )
+				,Bodies.rectangle(300, 200, 80, 80, )
+				,Bodies.rectangle(500, 200, 80, 80, )
+				,Bodies.rectangle(600, 200, 80, 80, )
+				,Bodies.rectangle(700, 200, 80, 80, )
+				,Bodies.rectangle(500, 200, 160, 40)
+				,Bodies.rectangle(500, 200, 160, 40)
+				,Bodies.rectangle(500, 200, 160, 40)];
+window.ground = Bodies.rectangle(400, 380, 8100, 60, { isStatic: true ,friction:0.01});
+window.jumpSensor = Bodies.rectangle(0, 0, 70, 10, {
     sleepThreshold: 99999999999,
     isSensor: true
 });
@@ -98,17 +99,21 @@ window.addEventListener("click", function(e) {
 			Matter.Body.set(bodies[i],{clickPoint:temp})
 			if (temp&&!bodies[i].isStatic) {
 				sel=bodies[i];
-				Matter.Body.set(sel,{isStatic:true})
 				break;
 			}
 		}
 });
  (function render() {
+canvas.width = document.body.clientWidth;
+canvas.height = document.body.clientHeight-30;
 	 if (realityExists) {
+		 let avgWeight=20
 	 if (jumpSensor) {Body.setPosition(jumpSensor,Vector.add(boxA.position,{x:0,y:50}))}
-	 options.cdx=((boxA.position.x-800))
-	 options.cdy=((boxA.position.y-600))
-	 Matter.Body.applyForce(boxA,boxA.position,{x:(input.left?-0.01:0)+(input.right?0.01:0),y:0})
+	 options.cdx=(((boxA.position.x-canvas.width+clickedII[0]))+options.cdx*avgWeight )/(1+avgWeight)
+	 options.cdy=(((boxA.position.y-canvas.height+clickedII[1]))+options.cdy*avgWeight)/(1+avgWeight)
+	 if (isNaN(options.cdx)) options.cdx=0
+	 if (isNaN(options.cdy)) options.cdy=0
+	 Matter.Body.applyForce(boxA,boxA.position,{x:(input.left?-0.0006:0)+(input.right?0.0006:0),y:0})
 	 //document.onmousemove()
     var bodies = Matter.Composite.allBodies(engine.world);
 
@@ -119,12 +124,18 @@ window.addEventListener("click", function(e) {
     context.beginPath();
 	
 	context.fillStyle = "#f00"
+			context.fillRect(boxA.position.x-options.cdx-40
+						,boxA.position.y-options.cdy-40
+						,80
+						,80)
 	
 	let collides=false
 	bodies.forEach((x)=>{collides=collides||(Matter.SAT.collides(jumpSensor,x).collided&&x!=boxA)})
-	if (input.up&&collides) {Body.setVelocity(boxA,{x:boxA.velocity.x,y:-10})}
+	if (input.up&&collides) {Body.setVelocity(boxA,{x:boxA.velocity.x,y:-14})}
 	
 	if (sel!=0) {
+		Matter.Body.setPosition(sel,{x:clicked[0],y:clicked[1]});
+		Body.setVelocity(sel,Vector.create())
 		let collides=false
 		bodies.forEach((x)=>{collides=collides||(Matter.SAT.collides(sel,x).collided&&sel!=x)})
 		if (collides) {
@@ -143,7 +154,10 @@ window.addEventListener("click", function(e) {
 						,2,2)
 	}
     for (var i = 0; i < bodies.length; i += 1) {
-    context.strokeStyle = '#999';
+		if (!bodies[i].color) {Body.set(bodies[i],{color:"#"+Math.floor(Math.random()*16777215).toString(16)})}
+    context.fillStyle = bodies[i].color;
+	context.strokeStyle="#0"
+	context.beginPath()
         var vertices = bodies[i].vertices;
 
         context.moveTo(vertices[0].x-options.cdx, vertices[0].y-options.cdy);
@@ -153,10 +167,11 @@ window.addEventListener("click", function(e) {
         }
 
         context.lineTo(vertices[0].x-options.cdx, vertices[0].y-options.cdy);
+    context.lineWidth = 3;
+	context.fill()
+	context.stroke()
     }
 
-    context.lineWidth = 3;
-    context.stroke();
 	 }
     window.requestAnimationFrame(render);
 	 })();
@@ -195,4 +210,14 @@ window.addEventListener("keydown", function(event) {
             resetWorld()
             break;
 }})
+window.oncontextmenu = function(e) {
+	e.preventDefault()
+	if (sel) {
+		if (sel.angularVelocity>0.01) {
+			Body.setAngularVelocity(sel,0.1)
+		} else {
+			Body.setAngularVelocity(sel,-0.1)
+		}
+	}
+}
 resetWorld()

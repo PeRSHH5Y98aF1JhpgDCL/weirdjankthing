@@ -17,7 +17,7 @@ realityExists=false
 resetWorld=()=>{             
 World.clear(engine.world)
 realityExists=false
-window.boxA = Bodies.rectangle(400, 200, 80, 80, {inertia:Infinity,friction:0.002,density:0.0001,color:"#f00"});
+window.boxA = Bodies.rectangle(00, 200, 80, 80, {inertia:Infinity,friction:0.002,density:0.0001,color:"#f00"});
 window.otherBodies=[Bodies.circle(-380, 100, 40, 10),Bodies.circle(-460, 10, 40, 10)
 				,Bodies.rectangle(1000, 50, 80, 1000, { isStatic: true })
 				,Bodies.rectangle(-1000, 50, 80, 1000, { isStatic: true })
@@ -104,8 +104,8 @@ window.addEventListener("click", function(e) {
 		}
 });
  (function render() {
-canvas.width = document.body.clientWidth;
-canvas.height = document.body.clientHeight-30;
+canvas.width = document.body.clientWidth-100;
+canvas.height = document.body.clientHeight-100;
 	 if (realityExists) {
 		 let avgWeight=20
 	 if (jumpSensor) {Body.setPosition(jumpSensor,Vector.add(boxA.position,{x:0,y:50}))}
